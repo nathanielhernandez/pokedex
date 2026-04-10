@@ -1,35 +1,26 @@
 import React from "react";
-import { useQuery } from "@tanstack/react-query";
+import { usePokemonList } from "../hooks/usePokemonList";
+
+import PokeCard from "./PokeCard";
+import { usePokemonContext } from "../context/PokemonContext";
 
 interface Pokemon {
   name: string;
   url: string;
 }
 
-interface PokemonListRespone {
-  count: number;
-  next: string | null;
-  previous: string | null;
-  results: Pokemon[];
-}
-
-const getPokemon = async (): Promise<PokemonListRespone> => {
-  const response = await fetch(`https://pokeapi.co/api/v2/pokemon/?limit=20`);
-  if (!response.ok) {
-    throw new Error("Network response was not ok");
-  }
-  return response.json();
-};
-
 const Directory = () => {
-  const query = useQuery({ queryKey: ["pokemon"], queryFn: getPokemon });
+  const { state } = usePokemonContext();
+  const { data } = usePokemonList(state.pageNumber, state.numberPerPage);
 
   return (
-    <div className="grid grid-cols-4 gap-4">
-      {query.data?.results?.map((pokemon: Pokemon) => (
-        <div key={pokemon.name}>{pokemon.name}</div>
-      ))}
-    </div>
+    <>
+      <div className="grid grid-cols-5 gap-4 p-4">
+        {data?.results?.map((pokemon: Pokemon) => (
+          <PokeCard key={pokemon.name} name={pokemon.name} />
+        ))}
+      </div>
+    </>
   );
 };
 

@@ -6,8 +6,8 @@ interface PokemonState {
 }
 
 const initialState: PokemonState = {
-  pageNumber: 1,
-  numberPerPage: 10,
+  pageNumber: 0,
+  numberPerPage: 50,
 };
 
 type PokemonAction =
